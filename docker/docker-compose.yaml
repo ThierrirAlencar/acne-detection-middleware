@@ -1,0 +1,63 @@
+name: AcneDetection
+
+networks:
+  app-tier:
+    driver: bridge
+services:
+  db:
+    image: bitnami/postgresql:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_DB_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+
+    ports:
+      - "${POSTGRES_DB_EXPORT_PORT}:${POSTGRES_DB_INTERNAL_PORT}" # externa/interna
+      
+    volumes:
+      - postgres_data:/bitnami/postgresql
+  storage:
+    restart: unless-stopped
+    image: bitnami/minio:latest
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/bitnami/minio
+    
+
+  cache:
+    image: bitnami/redis:latest
+    restart: unless-stopped
+    networks:
+      - app-tier
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "6379:6379"
+  
+  sql-viewer:
+      image: sqlpad/sqlpad:latest
+      container_name: sql_viewer
+      ports:
+        - "3000:3000"
+      volumes:
+        - sqlpad_data:/var/lib/sqlpad
+      restart: unless-stopped
+
+
+
+  # CompareAPI: 
+  #   image: OUR IMAGE (WHEN DEPLOY)
+  #   networks:
+  #     - app-tier
+
+
+volumes:
+  postgres_data:
+  minio_data:
+  sqlpad_data:
