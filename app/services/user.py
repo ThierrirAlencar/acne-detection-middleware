@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 from app.models.user import User
+from app.schemas.user import UserUpdate
 
 
 
@@ -59,17 +60,18 @@ class user_service:
         session.close()
         return user;
 
-    def update(self, session:Session, id: int, name: str = None, email: str = None):
+    def update(self, session:Session, id: int, data:UserUpdate):
+        
         user = session.query(User).filter(User.id == id).first()
         
         if not user:
             session.close()
             return None
 
-        if name:
-            user.name = name
-        if email:
-            user.email = email
+        if data.name:
+            user.name = data.name
+        if data.email:
+            user.email = data.email
 
         session.commit()
         session.refresh(user)

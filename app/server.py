@@ -3,9 +3,13 @@ from flask_openapi3.openapi import OpenAPI
 
 def api_routes(app: OpenAPI):
     from app.api.user.user_router import router as user_router
+    from app.api.appointment.appointment_router import router as appointment_router
+    from app.api.inquiry import inquiry_router 
 
     with app.app_context():
         app.register_api(user_router)
+        app.register_api(inquiry_router)
+        app.register_api(appointment_router)
     pass;
 
 def init_db(app):
