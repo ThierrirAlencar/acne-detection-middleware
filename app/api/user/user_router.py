@@ -1,5 +1,5 @@
 from flask_openapi3 import Tag, APIBlueprint
-
+from app.services.user import user_service
 tag = Tag(name="user",description="Routes used for user management")
 
 router = APIBlueprint(
@@ -9,6 +9,8 @@ router = APIBlueprint(
     url_prefix="/users"
 )
 
-@router.get("/")
+service = user_service;
+
+@router.post("/")
 async def getone():
     return "you should get one"
