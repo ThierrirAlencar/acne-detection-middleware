@@ -1,3 +1,5 @@
+from typing import List
+
 from flask_openapi3 import Tag, APIBlueprint
 from app.schemas.appointment import AppointmentCreate, AppointmentResponse, AppointmentParams, AppointmentUpdate
 from app.services.appointment import appointment_service
@@ -20,7 +22,7 @@ async def create(body: AppointmentCreate):
                          user_id=body.user_id
                          )
 
-@router.put("/", responses={200: AppointmentResponse}, description="Route used for Appointment update")
+@router.put("/<int:id>", responses={200: AppointmentResponse}, description="Route used for Appointment update")
 async def update(body: AppointmentUpdate, params: AppointmentParams):
     return service.update(db.session(), params.id, user_id=body.user_id)
 
@@ -28,7 +30,7 @@ async def update(body: AppointmentUpdate, params: AppointmentParams):
 async def get_one(path: AppointmentParams):
     return service.getOne(db.session(), id=path.id)
 
-@router.get("/", responses={200: [AppointmentResponse]}, description="Route used to list all appointments")
+@router.get("/", responses={200: AppointmentResponse}, description="Route used to list all appointments")
 async def get_all():
     return service.getAll(db.session())
 

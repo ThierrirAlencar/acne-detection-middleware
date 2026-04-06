@@ -16,7 +16,7 @@ class User(Base):
     username:Mapped[Optional[str]] = mapped_column(String(60), nullable=True, default=None)
 
     ## Relationships
-    appointments = relationship("appointment", back_populates="user")
+    appointments = relationship("Appointment", back_populates="user")
 
     ## Colunas com valores padrões
     created_at:Mapped[Optional[datetime]] = mapped_column(DateTime,nullable=True,default=None)

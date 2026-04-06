@@ -6,6 +6,8 @@ from alembic import context
 # 1. importa sua Base e TODOS os models (para o Alembic detectá-los)
 from app.core.database import Base
 from app.models.user import User  # repita para cada model
+from app.models.appointment import Appointment
+from app.models.inquiry import Inquiry
 
 config = context.config
 fileConfig(config.config_file_name)

@@ -1,5 +1,6 @@
 from minio import Minio
 import uuid
+from app.core.config import ALLOWED_EXTENSIONS
 from app.core.env import MINIO_PASS, MINIO_PATH, MINIO_USER
 
 client = Minio(
@@ -34,3 +35,6 @@ def upload_file(file):
     url = f"http://localhost:9000/{BUCKET_NAME}/{filename}"
 
     return filename, url
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
