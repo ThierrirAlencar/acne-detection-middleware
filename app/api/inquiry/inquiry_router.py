@@ -1,4 +1,7 @@
+from flask import jsonify, request
 from flask_openapi3 import Tag, APIBlueprint
+from app.core.storage import upload_file
+from app.models.inquiry import Inquiry
 from app.schemas.inquiry import InquiryCreate, InquiryResponse, InquiryParams, InquiryUpdate
 from app.services.inquiry import inquiry_service
 from app.core.database import db
@@ -16,11 +19,26 @@ service = inquiry_service()
 
 @router.post("/", responses={200: InquiryResponse}, description="Route used for Inquiry creation")
 async def create(body: InquiryCreate):
-    return service.create(db.session(), 
+
+    if "file" not in request.files:
+        return jsonify({"error": "No file sent"}), 400
+
+    file = request.files["file"]
+
+    filename, url = upload_file(file)
+    
+    inquiry = service.create(db.session(), 
                          appointment_id=body.appointment_id,
-                         image_url=body.image_url,
+                         image_url=url,
                          inquiry_status=body.inquiry_status
                          )
+    if not inquiry:
+        return jsonify({"error":"Erro ao tentar criar registro"}), 400
+    
+    return jsonify({
+        "data":inquiry,
+        "upload":f"Upload realizado com sucesso, filename: {filename}"
+    })
 
 @router.put("/", responses={200: InquiryResponse}, description="Route used for Inquiry update")
 async def update(body: InquiryUpdate, params: InquiryParams):
