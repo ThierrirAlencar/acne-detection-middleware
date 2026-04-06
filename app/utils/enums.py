@@ -2,7 +2,13 @@
 from enum import Enum
 
 class defaultStatusEnum(str, Enum):
-    Active = "Active"
-    Deactive = "Deactive"
-    Deleted = "Deleted"
-    
+    ACTIVE = "Active"
+    DEACTIVE = "Deactive"
+    DELETED = "Deleted"
+
+class inquiryStatus(str, Enum):
+    COMPLETED = "Completado"
+    ONGOING = "Processando"
+    FAILED = "Falha"
+
+

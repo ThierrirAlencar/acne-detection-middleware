@@ -11,7 +11,9 @@ def api_routes(app: OpenAPI):
 def init_db(app):
     #importe a lista de models
     from app.models.user import User
-
+    from app.models.appointment import Appointment
+    from app.models.inquiry import Inquiry
+    
     from app.core.database import db
     from sqlalchemy.orm import configure_mappers
 
