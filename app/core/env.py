@@ -5,6 +5,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+JWT_SECRET = os.getenv("JWT_SECRET", "default_secret_key")
 
 MINIO_USER = os.getenv("MINIO_USER")
 MINIO_PASS = os.getenv("MINIO_PASSWORD")

@@ -38,7 +38,8 @@ class Inquiry(Base):
             inquiry_status=None,
             result_text=None,
             result_json_url=None,
-            result_image_url=None
+            result_image_url=None,
+            image_url=None
         ):
         self.created_at = created_at;
         self.deleted_at = deleted_at;
@@ -48,4 +49,6 @@ class Inquiry(Base):
         self.result_json_url = result_json_url;
         self.result_text = result_text;
         self.appointment_id = appointment_id;
+        self.inquiry_status = inquiry_status;
+        self.image_url = image_url;
         self.inquiry_status = inquiry_status;

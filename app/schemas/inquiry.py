@@ -20,12 +20,17 @@ class InquiryUpdate(BaseModel):
 class InquiryParams(BaseModel):
     id: int
 
+class InquiryDetectionResume(BaseModel):
+    result_text: Optional[str] = None
+    result_json_url: Optional[str] = None
+    result_image_url: Optional[str] = None
+
 class InquiryResponse(InquiryBase):
     id: int
     result_text: Optional[str] = None
     result_json_url: Optional[str] = None
     result_image_url: Optional[str] = None
-    inquiry_status: inquiryStatus
+    inquiry_status: Optional[inquiryStatus] = None
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
     deleted_at: Optional[datetime]

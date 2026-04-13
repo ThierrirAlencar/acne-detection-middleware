@@ -24,7 +24,7 @@ async def create(body:UserCreate):
                           username=body.username
                             )
 
-@router.post("/login", responses={200: dict}, description="Route used for User login")
+@router.post("/login", responses={200: UserBase}, description="Route used for User login")
 async def login(body: Login):
     return auth.login(session=db.session(), email=body.email, password=body.password)
 

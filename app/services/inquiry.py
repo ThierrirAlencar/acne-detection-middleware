@@ -1,3 +1,4 @@
+from app.schemas.inquiry import InquiryDetectionResume
 from sqlalchemy.orm import Session
 from datetime import datetime
 from app.models.inquiry import Inquiry
@@ -13,14 +14,18 @@ class inquiry_service:
             session: Session,
             appointment_id: int,
             image_url: str = None,
-            inquiry_status: inquiryStatus = inquiryStatus.ONGOING
+            inquiry_status: inquiryStatus = inquiryStatus.ONGOING,
+            completion_data:InquiryDetectionResume | None = None
         ):
         
         inquiry = Inquiry(
             appointment_id=appointment_id,
             image_url=image_url,
             inquiry_status=inquiry_status,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
+            result_text=completion_data.result_text if completion_data else None,
+            result_json_url=completion_data.result_json_url if completion_data else None,
+            result_image_url=completion_data.result_image_url if completion_data else None
         )
         
         session.add(inquiry)
@@ -33,7 +38,10 @@ class inquiry_service:
             "appointment_id": inquiry.appointment_id, 
             "image_url": inquiry.image_url,
             "inquiry_status": inquiry.inquiry_status,
-            "created_at": inquiry.created_at
+            "created_at": inquiry.created_at,
+            "result_text": inquiry.result_text,
+            "result_json_url": inquiry.result_json_url,
+            "result_image_url": inquiry.result_image_url
         }
     
     def getOne(

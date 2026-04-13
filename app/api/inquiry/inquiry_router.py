@@ -68,24 +68,4 @@ async def get_all():
 async def delete(params: InquiryParams):
     return service.delete(db.session(), id=params.id)
 
-@router.route('/upload', methods=['POST'])
-def upload_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'Nenhuma imagem enviada'}), 400
 
-    file = request.files['image']
-
-    if file.filename == '':
-        return jsonify({'error': 'Nome de arquivo vazio'}), 400
-
-    if not allowed_file(file.filename):
-        return jsonify({'error': 'Tipo de arquivo não permitido'}), 400
-
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-    filename = secure_filename(file.filename)
-    temp_filename = f"{uuid.uuid4()}_{filename}"
-    save_path = os.path.join(UPLOAD_FOLDER, temp_filename)
-    file.save(save_path)
-
-    return jsonify({'message': 'Imagem salva com sucesso', 'path': save_path}), 200
