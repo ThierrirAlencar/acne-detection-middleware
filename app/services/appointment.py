@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 from app.models.appointment import Appointment
+from app.models.inquiry import Inquiry
 
 
 
@@ -50,6 +51,16 @@ class appointment_service:
         
         return appointments
     
+    def getInquiries(
+            self,
+            session: Session,
+            appointment_id: int
+    ):
+        inquiries = session.query(Inquiry).filter(Inquiry.appointment_id == appointment_id).all()
+        session.close()
+        
+        return inquiries
+
     def delete(
             self,
             session: Session,

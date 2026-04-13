@@ -171,6 +171,10 @@ def process_image(image_path, consulta_id, conf=0.25):
     if not os.path.exists(ACNE_MODEL_PATH): raise FileNotFoundError("Modelo YOLO não encontrado")
 
     img = cv2.imread(image_path)
+    if img is None:
+        raise RuntimeError(
+            "Falha ao ler a imagem. Verifique se o arquivo enviado é um formato de imagem válido."
+        )
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(PREDICTOR_PATH)

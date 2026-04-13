@@ -57,7 +57,14 @@ def upload_image():
     temp_filename = f"{uuid.uuid4()}_{filename}"
     save_path = os.path.join(UPLOAD_FOLDER, temp_filename)
     file.save(save_path)
-    detection_res = detection_service.run(save_path, temp_filename, conf=0.25)
+
+    try:
+        detection_res = detection_service.run(save_path, temp_filename, conf=0.25)
+    except Exception as e:
+        return jsonify({
+            'error': 'Falha na detecção',
+            'details': str(e)
+        }), 500
 
     completion_data = InquiryDetectionResume(
         result_text=f"GAGS Score: {detection_res.gags_score}, Severity: {detection_res.gags_severity}",

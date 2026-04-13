@@ -1,9 +1,9 @@
 import os
 import json
-import subprocess
-import sys
 from dataclasses import dataclass
 from typing import Optional
+
+from app.services.detect.main import process_image
 
 # Caminho absoluto para o script de detecção
 DETECTION_SCRIPT_PATH = os.path.join(
@@ -39,21 +39,7 @@ class DetectionService:
         consulta_id: str,
         conf: float = 0.25
     ) -> DetectionResult:
-        """
-        Executa o script de detecção de acne como subprocesso.
-
-        Args:
-            image_path:  Caminho absoluto para a imagem de entrada.
-            consulta_id: ID da consulta/inquiry (usado para organizar as pastas de saída).
-            conf:        Limiar de confiança do YOLO (padrão 0.25).
-
-        Returns:
-            DetectionResult com todos os dados do processamento.
-
-        Raises:
-            FileNotFoundError: Se a imagem ou o script não existirem.
-            RuntimeError:      Se o subprocesso falhar ou a saída for inválida.
-        """
+        
         self._validate_inputs(image_path)
 
         output = self._run_subprocess(image_path, consulta_id, conf)
@@ -88,56 +74,24 @@ class DetectionService:
         consulta_id: str,
         conf: float
     ) -> str:
-        """Executa o script e retorna o stdout."""
-        command = [
-            sys.executable,          # mesmo interpretador Python do ambiente
-            DETECTION_SCRIPT_PATH,
-            "--image", image_path,
-            "--consulta_id", str(consulta_id),
-            "--conf", str(conf),
-        ]
-
         try:
-            process = subprocess.run(
-                command,
-                capture_output=True,
-                text=True,
-                timeout=120  # 2 minutos — YOLO pode demorar na primeira inferência
-            )
-        except subprocess.TimeoutExpired:
-            raise RuntimeError("O processo de detecção excedeu o tempo limite (120s).")
+            output_folder = process_image(consulta_id=consulta_id, image_path=image_path, conf=conf)
         except Exception as e:
-            raise RuntimeError(f"Falha ao iniciar o subprocesso: {e}")
-
-        if process.returncode != 0:
             raise RuntimeError(
-                f"O script de detecção retornou erro (código {process.returncode}).\n"
-                f"stderr: {process.stderr.strip()}"
+                f"Falha ao executar o processo de detecção: {type(e).__name__}: {e}"
             )
 
-        return process.stdout.strip()
-
-    def _parse_subprocess_output(self, raw_output: str) -> str:
-        """Extrai o output_folder do JSON impresso pelo script."""
-        if not raw_output:
-            raise RuntimeError("O script não retornou nenhuma saída.")
-
-        # O script pode emitir logs antes do JSON; pega só a última linha
-        last_line = raw_output.splitlines()[-1]
-
-        try:
-            data = json.loads(last_line)
-        except json.JSONDecodeError:
-            raise RuntimeError(
-                f"Saída do script não é um JSON válido: {last_line!r}"
-            )
-
-        output_folder = data.get("output_folder")
         if not output_folder:
-            raise RuntimeError("JSON de saída não contém 'output_folder'.")
+            raise RuntimeError("O processo de detecção não retornou pasta de saída.")
 
         return output_folder
 
+    def _parse_subprocess_output(self, raw_output: str) -> str:
+        """Retorna a pasta de saída diretamente quando o processo é chamado internamente."""
+        if not raw_output:
+            raise RuntimeError("O processo de detecção não retornou nenhuma saída.")
+
+        return raw_output
     def _read_result_json(self, output_folder: str) -> dict:
         """Lê o result.json gerado pelo script."""
         result_path = os.path.join(output_folder, "result.json")
