@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.user import User
 from app.schemas.user import UserUpdate
 
@@ -17,7 +18,7 @@ class user_service:
         ):
 
         user = User(email=email,
-                    password=password,
+                    password=generate_password_hash(password),
                     username=username, 
                     created_at=datetime.utcnow()
                     )
@@ -73,7 +74,7 @@ class user_service:
         if data.email:
             user.email = data.email
         if data.password:
-            user.password = data.password
+            user.password = generate_password_hash(data.password)
         if data.status:
             user.status = data.status
 
