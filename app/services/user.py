@@ -30,7 +30,7 @@ class user_service:
 
         session.close()
 
-        return {"email":user.email, "username":user.userbame}
+        return {"email":user.email, "username":user.username}
     
     def getOne(
             self,
@@ -68,10 +68,14 @@ class user_service:
             session.close()
             return None
 
-        if data.name:
-            user.name = data.name
+        if data.username:
+            user.username = data.username
         if data.email:
             user.email = data.email
+        if data.password:
+            user.password = data.password
+        if data.status:
+            user.status = data.status
 
         session.commit()
         session.refresh(user)

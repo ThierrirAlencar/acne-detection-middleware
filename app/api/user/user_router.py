@@ -12,11 +12,11 @@ router = APIBlueprint(
     url_prefix="/users"
 )
 
-service = user_service;
+service = user_service()
 
 @router.post("/",responses={200:UserBase},description="Route used for User creation")
 async def create(body:UserCreate):
-    return service.create(db.session(), 
+    return service.create(session=db.session(), 
                           email=body.email,
                           password=body.password, 
                           username=body.username
@@ -24,13 +24,13 @@ async def create(body:UserCreate):
 
 @router.put("/",responses={200:UserBase},description="Route used for User update")
 async def update(body:UserUpdate, params:UserParams):
-    return service.update(db.session(),params.id,data=body)
+    return service.update(session=db.session(),id=params.id,data=body)
 
 @router.get("/profile",responses={200:UserBase},description="Route used to get an out of permission user")
 async def profile(params:UserParams):
-    return service.getOne(db.session(),id=params.id)
+    return service.getOne(session=db.session(),id=params.id)
 
 @router.delete("/",responses={200:UserBase},description="Route used to delete a user")
 async def delete(params:UserParams):
-    return service.delete(db.session(),id=params.id)
+    return service.delete(session=db.session(),id=params.id)
 

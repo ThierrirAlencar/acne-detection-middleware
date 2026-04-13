@@ -7,8 +7,8 @@ class defaultStatusEnum(str, Enum):
     DELETED = "Deleted"
 
 class inquiryStatus(str, Enum):
-    COMPLETED = "Completado"
-    ONGOING = "Processando"
-    FAILED = "Falha"
+    COMPLETED = "completado"
+    ONGOING = "processando"
+    FAILED = "falha"
 
 

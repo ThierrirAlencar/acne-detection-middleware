@@ -23,7 +23,7 @@ class User(Base):
     updated_at:Mapped[Optional[datetime]] = mapped_column(DateTime,nullable=True,default=None)
     deleted_at:Mapped[Optional[datetime]] = mapped_column(DateTime,nullable=True,default=None)
     
-    status:Mapped[defaultStatusEnum] = mapped_column(Enum(defaultStatusEnum), default=defaultStatusEnum.ACTIVE)
+    status:Mapped[defaultStatusEnum] = mapped_column(Enum(defaultStatusEnum, native_enum=True, values_callable=lambda x: [e.value for e in x]), default=defaultStatusEnum.ACTIVE)
 
     def __init__(
             self, 

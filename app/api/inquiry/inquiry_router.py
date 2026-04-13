@@ -1,10 +1,11 @@
 import os
+import uuid
 
 from flask import jsonify, request
 from flask_openapi3 import Tag, APIBlueprint
 from werkzeug.utils import secure_filename
 from app.core.config import UPLOAD_FOLDER
-from app.core.storage import allowed_file, upload_file
+from app.core.storage import allowed_file
 from app.models.inquiry import Inquiry
 from app.schemas.inquiry import InquiryCreate, InquiryResponse, InquiryParams, InquiryUpdate
 from app.services.inquiry import inquiry_service
@@ -80,8 +81,11 @@ def upload_image():
     if not allowed_file(file.filename):
         return jsonify({'error': 'Tipo de arquivo não permitido'}), 400
 
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
     filename = secure_filename(file.filename)
-    save_path = os.path.join(UPLOAD_FOLDER, filename)
+    temp_filename = f"{uuid.uuid4()}_{filename}"
+    save_path = os.path.join(UPLOAD_FOLDER, temp_filename)
     file.save(save_path)
 
     return jsonify({'message': 'Imagem salva com sucesso', 'path': save_path}), 200
