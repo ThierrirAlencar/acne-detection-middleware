@@ -19,7 +19,7 @@ class Inquiry(Base):
 
     # Relationships
     appointment_id:Mapped[int] = mapped_column(Integer, ForeignKey("appointment.id"))
-    appointment = relationship("Appointment", back_populates="appointments")
+    appointment = relationship("Appointment", back_populates="inquiries")
 
     ## Colunas com valores padrões
     created_at:Mapped[Optional[datetime]] = mapped_column(DateTime,nullable=True,default=None)

@@ -14,10 +14,10 @@ class Appointment(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True, unique=True);
 
     # Relationships
-    user_id:Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user_id:Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
     user = relationship("User", back_populates="appointments")
 
-    inquiries = relationship("inquiry", back_populates="appointment")
+    inquiries = relationship("Inquiry", back_populates="appointment")
 
     ## Colunas com valores padrões
     created_at:Mapped[Optional[datetime]] = mapped_column(DateTime,nullable=True,default=None)

@@ -5,7 +5,7 @@ import dlib
 import numpy as np
 from shapely.geometry import Polygon, Point
 from ultralytics import YOLO
-
+import argparse
 
 BASE_DIR = os.getcwd()
 DETECTIONS_DIR = os.path.join(BASE_DIR, '.temp/detections')
@@ -224,7 +224,23 @@ def process_image(image_path, consulta_id, conf=0.25):
 
     return final_folder
 
-# if __name__ == '__main__':
-#     folder = process_image("/content/drive/MyDrive/testesYOLO/valid_dataset/images/levle0_156_png_jpg.rf.1f204208cf42a666febd049826db12d2.jpg", "consulta_teste_01")
-#     print(f"Resultado salvo em: {folder}")
-#     pass
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("--image", required=True, help="Caminho da imagem")
+    parser.add_argument("--consulta_id", required=True)
+    parser.add_argument("--conf", type=float, default=0.25)
+
+    args = parser.parse_args()
+
+    folder = process_image(
+        args.image,
+        args.consulta_id,
+        args.conf
+    )
+
+    print(json.dumps({
+        "output_folder": folder
+    }))

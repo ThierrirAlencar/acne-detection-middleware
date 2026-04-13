@@ -1,0 +1,5 @@
+dlib
+shapely
+ultralytics
+argparse
+opencv-python 
