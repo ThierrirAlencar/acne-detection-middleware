@@ -208,7 +208,7 @@ def process_image(image_path, consulta_id, conf=0.25):
     if not error_msg and regions_coords:
         score, severity, region_counts = assign_and_calculate_gags(detections, regions_coords)
     else:
-        score, severity, region_counts = 0, "Error", {}
+        score, severity, region_counts = 0, "Não calculado", {}
 
     base_folder = os.path.join(DETECTIONS_DIR, consulta_id)
     final_folder = get_next_folder(base_folder)

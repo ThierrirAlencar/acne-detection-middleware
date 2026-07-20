@@ -49,7 +49,7 @@ class DetectionService:
         return DetectionResult(
             output_folder=output_folder,
             gags_score=result_data.get("gags_score", 0),
-            gags_severity=result_data.get("gags_severity", "Error"),
+            gags_severity=result_data.get("gags_severity", "Não calculado"),
             region_counts=result_data.get("region_counts", {}),
             image_path=result_data.get("image_path", ""),
             error=result_data.get("error")

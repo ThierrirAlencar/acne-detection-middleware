@@ -12,7 +12,7 @@ class User(Base):
 
     id:Mapped[int] = mapped_column(Integer,primary_key=True,autoincrement=True,index=True,unique=True);
     email:Mapped[str] = mapped_column(String(120), index=True, unique=True);
-    password:Mapped[str] = mapped_column(String(60));
+    password:Mapped[str] = mapped_column(String(255));
     username:Mapped[Optional[str]] = mapped_column(String(60), nullable=True, default=None)
 
     ## Relationships

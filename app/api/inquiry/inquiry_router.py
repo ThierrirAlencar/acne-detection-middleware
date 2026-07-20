@@ -48,13 +48,13 @@ service = inquiry_service()
 @router.put("/", responses={200: InquiryResponse}, description="Route used for Inquiry update")
 async def update(body: InquiryUpdate, params: InquiryParams):
     return service.update(db.session(), 
-                         params.id,
-                         image_url=body.image_url,
-                         result_text=body.result_text,
-                         result_json_url=body.result_json_url,
-                         result_image_url=body.result_image_url,
-                         inquiry_status=body.inquiry_status
-                         )
+                        params.id,
+                        image_url=body.image_url,
+                        result_text=body.result_text,
+                        result_json_url=body.result_json_url,
+                        result_image_url=body.result_image_url,
+                        inquiry_status=body.inquiry_status
+                    )
 
 @router.get("/<int:id>", responses={200: InquiryResponse}, description="Route used to get an inquiry by ID")
 async def get_one(path: InquiryParams):

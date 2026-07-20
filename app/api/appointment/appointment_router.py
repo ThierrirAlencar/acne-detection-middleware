@@ -19,8 +19,8 @@ service = appointment_service()
 @router.post("/", responses={200: AppointmentResponse}, description="Route used for Appointment creation")
 async def create(body: AppointmentCreate):
     return service.create(db.session(), 
-                         user_id=body.user_id
-                         )
+                        user_id=body.user_id
+                    )
 
 @router.put("/<int:id>", responses={200: AppointmentResponse}, description="Route used for Appointment update")
 async def update(body: AppointmentUpdate, params: AppointmentParams):

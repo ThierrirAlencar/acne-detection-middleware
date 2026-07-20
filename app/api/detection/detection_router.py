@@ -26,8 +26,8 @@ router = APIBlueprint(
 detection_service = DetectionService()
 inquiry_service = inquiry_service()
 
-@router.route('/classificate', methods=['POST'])
-def upload_image():
+@router.post('/classificate', responses={200: InquiryCreate}, description="Route used for running the detection model")
+async def upload_image():
 
     if 'image' not in request.files:
         return jsonify({'error': 'Nenhuma imagem enviada'}), 400
@@ -66,15 +66,19 @@ def upload_image():
             'details': str(e)
         }), 500
 
+    severity_text = detection_res.gags_severity
+    if detection_res.error:
+        severity_text = f"{severity_text} ({detection_res.error})"
+
     completion_data = InquiryDetectionResume(
-        result_text=f"GAGS Score: {detection_res.gags_score}, Severity: {detection_res.gags_severity}",
+        result_text=f"GAGS Score: {detection_res.gags_score}, Severity: {severity_text}",
         result_json_url=detection_res.result_json_path,
         result_image_url=detection_res.result_image_path
     )
 
     return inquiry_service.create(db.session(), 
-                                  appointment_id=appointment_id, 
-                                  image_url=image_url or save_path,
-                                  inquiry_status=inquiryStatus.COMPLETED,
-                                  completion_data=completion_data
-                                  )
+                                appointment_id=appointment_id, 
+                                image_url=image_url or save_path,
+                                inquiry_status=inquiryStatus.COMPLETED,
+                                completion_data=completion_data
+                            )
